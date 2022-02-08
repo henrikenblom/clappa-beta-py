@@ -1,0 +1,8 @@
+matplotlib~=3.5.1
+numpy~=1.22.2
+ipython~=8.0.1
+pandas~=1.4.0
+tensorflow~=2.8.0
+tensorflow_hub~=0.12.0
+sounddevice~=0.4.4
+hue-py~=0.3.1
