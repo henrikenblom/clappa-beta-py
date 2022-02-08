@@ -10,6 +10,7 @@ import discoverhue as discoverhue
 import numpy as np
 import pyfiglet as pyfiglet
 import sounddevice as sd
+from colorama import Fore, Style
 from hue_api import HueApi
 from hue_api.exceptions import UninitializedException, ButtonNotPressedException
 
@@ -126,7 +127,8 @@ def get_user_light_selection():
         valid_indices.append(light.id)
         print(light)
     selected_lights_string = input(
-        "Enter the corresponding numbers of the lights you wish to control (separated by commas): ")
+        "Enter the corresponding numbers of the lights you wish to control "
+        "(separated by commas): ")
     try:
         parsed_list = list(map(int, selected_lights_string.split(",")))
         if set(parsed_list).issubset(valid_indices):
@@ -142,7 +144,8 @@ def get_user_light_selection():
 def print_logo():
     figlet = pyfiglet.Figlet(font='vortron_')
     print()
-    print(figlet.renderText("CLAPPA BETA PY"))
+    print(Fore.CYAN + figlet.renderText("CLAPPA BETA PY"))
+    print(Style.RESET_ALL)
 
 
 def main():
