@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import logging
 import time
 
 import numpy as np
@@ -6,6 +7,7 @@ import sounddevice as sd
 from hue_api import HueApi
 from hue_api.exceptions import UninitializedException, ButtonNotPressedException
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 first_clap_heard_at = 0.0
 time_since_first_clap = 0.0
 volume_limit = 40
@@ -48,23 +50,23 @@ def connect_to_hue_bridge():
                 connected = True
             except ButtonNotPressedException:
                 time.sleep(1)
-    print("Connected to bridge")
+    logging.info("Connected to bridge")
 
 
 def toggle_lights():
-    print("Toggling lights")
+    logging.info("Toggling lights")
     hue.toggle_on(office_lights)
 
 
 def main():
     connect_to_hue_bridge()
     hue.fetch_lights()
-    print("Controlling these lights:")
+    logging.debug("Controlling these lights:")
     for light in hue.filter_lights(office_lights):
-        print(light)
+        logging.debug(light)
     stream = sd.InputStream(callback=audio_callback)
     with stream:
-        print("Running")
+        logging.info("Running")
         while True:
             sd.sleep(100000)
 
