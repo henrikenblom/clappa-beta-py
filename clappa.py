@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import logging
 import time
 
@@ -7,7 +8,6 @@ import sounddevice as sd
 from hue_api import HueApi
 from hue_api.exceptions import UninitializedException, ButtonNotPressedException
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 first_clap_heard_at = 0.0
 time_since_first_clap = 0.0
 volume_limit = 40
@@ -15,6 +15,19 @@ individual_max_clap_duration = 0.08
 hue = HueApi()
 bridge_ip_address = "192.168.86.21"
 office_lights = [33, 34, 37, 38, 39]
+settings_dir = ".clappa/"
+hue_client_settings = settings_dir + "hue_client_settings"
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-log',
+                    '--loglevel',
+                    default='info',
+                    help='Set logging level.')
+
+args = parser.parse_args()
+
+logging.basicConfig(level=args.loglevel.upper(),
+                    format='%(asctime)s %(message)s')
 
 
 def audio_callback(in_data, _frames, audio_time, _status):
@@ -39,14 +52,14 @@ def reset_globals():
 
 def connect_to_hue_bridge():
     try:
-        hue.load_existing()
+        hue.load_existing(hue_client_settings)
     except UninitializedException:
         connected = False
         print("Press the link button on the bridge")
         while not connected:
             try:
                 hue.create_new_user(bridge_ip_address)
-                hue.save_api_key()
+                hue.save_api_key(hue_client_settings)
                 connected = True
             except ButtonNotPressedException:
                 time.sleep(1)
