@@ -61,6 +61,7 @@ def audio_callback(in_data, _frames, audio_time, _status):
 
 def toggle_lights():
     logging.info("Toggling lights")
+    hue.fetch_lights()
     hue.toggle_on(selected_lights)
 
 
@@ -80,11 +81,11 @@ def connect_to_hue_bridge():
                 connected = True
             except ButtonNotPressedException:
                 time.sleep(1)
-    logging.info("Connected to bridge")
+    print("Connected to bridge")
 
 
 def find_bridge():
-    print("Trying to find a bridge")
+    print("Trying to find a Hue bridge")
     found_bridges = discoverhue.find_bridges()
     if len(found_bridges) == 0:
         sys.exit("No bridge found")
@@ -153,7 +154,7 @@ def main():
         logging.debug(light)
     stream = sd.InputStream(callback=audio_callback)
     with stream:
-        print("Running - double clap to toggle lights! 👏->💡")
+        print("Running - double clap to toggle lights! 👏👏->💡")
         while True:
             sd.sleep(100000)
 
